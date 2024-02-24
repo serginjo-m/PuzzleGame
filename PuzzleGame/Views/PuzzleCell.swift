@@ -19,27 +19,19 @@ class PuzzleCell: UICollectionViewCell {
         let iView = UIImageView()
         iView.translatesAutoresizingMaskIntoConstraints = false
         iView.contentMode = .scaleAspectFill
-        iView.image = UIImage(named: "full")
+        iView.image = UIImage(named: "nature")
         return iView
     }()
     
     var imageTopAnchor: NSLayoutConstraint!
     var imageLeadingAnchor: NSLayoutConstraint!
     
-    
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         clipsToBounds = true
-        
         addSubview(imageView)
-        
-
-        
         imageTopAnchor = imageView.topAnchor.constraint(equalTo: topAnchor, constant: 0)
         imageTopAnchor.isActive = true
-        
-        
         imageLeadingAnchor = imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0)
         imageLeadingAnchor.isActive = true
         imageView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 3).isActive = true
