@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		CFAEA7392B87E4A0000AD386 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7382B87E4A0000AD386 /* AppDelegate.swift */; };
 		CFAEA73B2B87E4A0000AD386 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA73A2B87E4A0000AD386 /* SceneDelegate.swift */; };
-		CFAEA73D2B87E4A0000AD386 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA73C2B87E4A0000AD386 /* ViewController.swift */; };
+		CFAEA73D2B87E4A0000AD386 /* PuzzleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA73C2B87E4A0000AD386 /* PuzzleViewController.swift */; };
 		CFAEA7402B87E4A0000AD386 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CFAEA73E2B87E4A0000AD386 /* Main.storyboard */; };
 		CFAEA7452B87E4A2000AD386 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFAEA7442B87E4A2000AD386 /* Assets.xcassets */; };
 		CFAEA7482B87E4A2000AD386 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CFAEA7462B87E4A2000AD386 /* LaunchScreen.storyboard */; };
@@ -22,7 +22,7 @@
 		CFAEA7352B87E4A0000AD386 /* PuzzleGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PuzzleGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFAEA7382B87E4A0000AD386 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CFAEA73A2B87E4A0000AD386 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		CFAEA73C2B87E4A0000AD386 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		CFAEA73C2B87E4A0000AD386 /* PuzzleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleViewController.swift; sourceTree = "<group>"; };
 		CFAEA73F2B87E4A0000AD386 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CFAEA7442B87E4A2000AD386 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CFAEA7472B87E4A2000AD386 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -64,7 +64,7 @@
 			children = (
 				CFAEA7C12B88EFC9000AD386 /* Views */,
 				CFAEA7BD2B88EF85000AD386 /* Models */,
-				CFAEA73C2B87E4A0000AD386 /* ViewController.swift */,
+				CFAEA73C2B87E4A0000AD386 /* PuzzleViewController.swift */,
 				CFAEA73E2B87E4A0000AD386 /* Main.storyboard */,
 				CFAEA7442B87E4A2000AD386 /* Assets.xcassets */,
 				CFAEA7462B87E4A2000AD386 /* LaunchScreen.storyboard */,
@@ -165,7 +165,7 @@
 			files = (
 				CFAEA7C52B892CB7000AD386 /* Alert.swift in Sources */,
 				CFAEA7BF2B88EF9E000AD386 /* Puzzle.swift in Sources */,
-				CFAEA73D2B87E4A0000AD386 /* ViewController.swift in Sources */,
+				CFAEA73D2B87E4A0000AD386 /* PuzzleViewController.swift in Sources */,
 				CFAEA7392B87E4A0000AD386 /* AppDelegate.swift in Sources */,
 				CFAEA7C32B88EFDD000AD386 /* PuzzleCell.swift in Sources */,
 				CFAEA73B2B87E4A0000AD386 /* SceneDelegate.swift in Sources */,

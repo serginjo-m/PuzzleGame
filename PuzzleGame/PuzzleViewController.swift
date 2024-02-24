@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  PuzzleViewController.swift
 //  PuzzleGame
 //
 //  Created by Serginjo Melnik on 22/02/24.
@@ -7,40 +7,14 @@
 
 import UIKit
 
-class ViewController: UIViewController{
+class PuzzleViewController: UIViewController{
    
     private var collectionView: UICollectionView?
     
-    var colors: [UIColor] = [
-        .link,.systemGreen, .systemBlue, .red, .systemOrange, .black, .systemPurple, .systemYellow, .systemPink
-    ]
-    
-    var puzzle = [
-        Puzzle(title: "StreetFighter", solvedImages: ["1", "2", "3", "4", "5", "6", "7", "8", "9"])
-    ]
-    
-    //current puzzle (difficulty) index
-    var index: Int = 0
-    //shows hint for 2 seconds
-    var gameTimer: Timer?
-    //full image
-    var hintImage = UIImageView()
+    var puzzle = Puzzle(title: "StreetFighter", solvedImages: ["1", "2", "3", "4", "5", "6", "7", "8", "9"])
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        let rightBarItem = UIBarButtonItem(title: "Hint",
-                        style: .plain,
-                        target: self,
-                        action: #selector(handleHint))
-        
-        self.navigationItem.rightBarButtonItem = rightBarItem
-        
-        navigationItem.title = "Users View"
-        
-        
-        // Do any additional setup after loading the view.
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -48,86 +22,55 @@ class ViewController: UIViewController{
                                  height: view.frame.size.width/3.2)
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         
-        
         collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        
         collectionView?.register(PuzzleCell.self, forCellWithReuseIdentifier: "cell")
+        //-->
         collectionView?.dragInteractionEnabled = true
+        collectionView?.dragDelegate = self
+        collectionView?.dropDelegate = self
+        //<--
         collectionView?.delegate = self
         collectionView?.dataSource = self
         collectionView?.backgroundColor = .white
         
-        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture(_:)))
-        collectionView?.addGestureRecognizer(gesture)
+        
         view.addSubview(collectionView!)
+        
+        navigationItem.title = "Users View"
         view.backgroundColor = .white
     }
     
-    @objc func handleLongPressGesture(_ gesture: UILongPressGestureRecognizer){
-        guard let collectionView = self.collectionView else {return}
-        
-        switch gesture.state{
-            
-        case .began:
-            guard let targetIndexPath = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) else {return}
-            collectionView.beginInteractiveMovementForItem(at: targetIndexPath)
-        case .changed:
-            collectionView.updateInteractiveMovementTargetPosition(gesture.location(in: collectionView))
-        case .ended:
-            collectionView.endInteractiveMovement()
-        default:
-            collectionView.cancelInteractiveMovement()
-        }
-    }
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
         collectionView?.frame = view.bounds
     }
-    
-    @objc func handleHint(){
-        hintImage.image = UIImage(named: "full")
-        hintImage.backgroundColor = .white
-        hintImage.contentMode = .scaleAspectFit
-        hintImage.frame = self.view.frame
-        self.view.addSubview(hintImage)
-        self.collectionView?.isHidden = true
-        self.view.bringSubviewToFront(hintImage)
-        gameTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(removeHintImage), userInfo: nil, repeats: false)
-    }
-    @objc func removeHintImage() {
-        self.view.sendSubviewToBack(hintImage)
-        self.collectionView?.isHidden = false
-        navigationItem.rightBarButtonItem?.isEnabled = false
-    }
+
 }
 
-extension ViewController: UICollectionViewDataSource {
-    
-    
-    
+extension PuzzleViewController: UICollectionViewDataSource {
+    //+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         //return colors.count
-        return puzzle[self.index].unSolvedImages.count
+        return puzzle.unSolvedImages.count
     }
-    
+    //+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! PuzzleCell
-        cell.imageView.image = UIImage(named: puzzle[self.index].unSolvedImages[indexPath.item])
-        cell.backgroundColor = colors[indexPath.row]
+        cell.imageView.image = UIImage(named: puzzle.unSolvedImages[indexPath.item])
         return cell
     }
 }
 
-extension ViewController: UICollectionViewDelegateFlowLayout {
-    
+extension PuzzleViewController: UICollectionViewDelegateFlowLayout {
+    //+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 //        return CGSize(width: view.frame.size.width/3.2, height: view.frame.size.width/3.2)
         
         let collectionViewWidth = collectionView.bounds.width
         var customCollectionWidth: CGFloat!
         
-        if puzzle[self.index].title == "StreetFighter" {
+        if puzzle.title == "StreetFighter" {
             customCollectionWidth = collectionViewWidth/4 - 8
         }else{
             customCollectionWidth = collectionViewWidth/3 - 10
@@ -135,20 +78,10 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
         
         return CGSize(width: customCollectionWidth, height: customCollectionWidth)
     }
-    
-    //TODO: Sort them out correctly
-    
-    func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
 
-    func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-//        let item = colors.remove(at: sourceIndexPath.row)
-//        colors.insert(item, at: destinationIndexPath.row)
-    }
-    
+    //+ this method implements UIEdgeInsets for different size of puzzle
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        if puzzle[self.index].title == "StreetFighter" {
+        if puzzle.title == "StreetFighter" {
             return UIEdgeInsets(top: 40, left: 16, bottom: 40, right: 16)
         }else{
             return UIEdgeInsets(top: 40, left: 10, bottom: 40, right: 10)
@@ -156,19 +89,21 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
     }
     
     
-    
+    //+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-    
+    //+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
 }
 
-extension ViewController: UICollectionViewDragDelegate {
+extension PuzzleViewController: UICollectionViewDragDelegate {
+    //+
+    //As you can see, in the ‘itemsForBeginning’ method we are calling our ‘dragItem’ that will deal with the dragItem to be returned. The helper method ‘dragItem’ helps us create the itemProvider with the correct string or image content, depending on the cell we are dragging.
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-        let item = self.puzzle[self.index].unSolvedImages[indexPath.item]
+        let item = self.puzzle.unSolvedImages[indexPath.item]
         let itemProvider = NSItemProvider(object: item as NSString)
         let dragItem = UIDragItem(itemProvider: itemProvider)
         dragItem.localObject = dragItem
@@ -176,14 +111,19 @@ extension ViewController: UICollectionViewDragDelegate {
     }
 }
 
-extension ViewController: UICollectionViewDropDelegate {
+extension PuzzleViewController: UICollectionViewDropDelegate {
+    //+
+    //This method tell the DropDelegate that something is happening when the user drags a cell and drops it at a new location.UICollectionViewDropProposal has four types of operation which is copy,forbidden,cancel,move.In this project I have used move operation which is to arrange the puzzles.
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
         if collectionView.hasActiveDrag {
             return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
         }
         return UICollectionViewDropProposal(operation: .forbidden)
     }
+    //+
+    //Use this method to accept the dropped content and integrate it into your collection view. In your implementation, iterate over the items property of the coordinator object and fetch the data from each UIDragItem.
     
+    //Incorporate the data into your collection view's data source and update the collection view itself by inserting any needed items. When incorporating items, use the methods of the coordinator object to animate the transition from the drag item's preview to the corresponding item in your collection view.We have calculating whether or not the cell will be dropped out of bounds.
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         var destinationIndexPath: IndexPath
         if let indexPath = coordinator.destinationIndexPath {
@@ -202,7 +142,7 @@ extension ViewController: UICollectionViewDropDelegate {
     fileprivate func reorderItems(coordinator: UICollectionViewDropCoordinator, destinationIndexPath: IndexPath, collectionView: UICollectionView) {
         if let item = coordinator.items.first, let sourceIndexPath = item.sourceIndexPath{
             collectionView.performBatchUpdates {
-                puzzle[self.index].unSolvedImages.swapAt(sourceIndexPath.item, destinationIndexPath.item)
+                puzzle.unSolvedImages.swapAt(sourceIndexPath.item, destinationIndexPath.item)
                 collectionView.reloadItems(at: [sourceIndexPath, destinationIndexPath])
             }
             //MARK: have a bit .....
@@ -210,17 +150,13 @@ extension ViewController: UICollectionViewDropDelegate {
         }
         
     }
-    
+    //+
+    //this method is called every time a item is dropped and checks everytime if puzzle is solved or not.If unsolvedImage array equals to solved image array. Change dragInteractionEnabled to false to tell user that puzzle has solved and show Alert .Enable rightBarbutton to true to navigate to next puzzle.
     func collectionView(_ collectionView: UICollectionView, dropSessionDidEnd session: UIDropSession) {
-        if puzzle[self.index].unSolvedImages == puzzle[self.index].solvedImages {
+        if puzzle.unSolvedImages == puzzle.solvedImages {
             Alert.showSolvedPuzzleAlert(on: self)
             
             collectionView.dragInteractionEnabled = false
-//            if index == puzzle.count - 1 {
-//                navigationItem.rightBarButtonItem?.isEnabled = false
-//            }else{
-//                navigationItem.rightBarButtonItem?.isEnabled = true
-//            }
         }
     }
 }
