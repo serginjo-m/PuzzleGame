@@ -8,23 +8,42 @@
 import UIKit
 class PuzzleCell: UICollectionViewCell {
     
+    var template: (top: CGFloat, leading: CGFloat)? {
+        didSet{
+            self.imageTopAnchor.constant = self.template!.top
+            self.imageLeadingAnchor.constant = self.template!.leading
+        }
+    }
+    
     let imageView: UIImageView = {
         let iView = UIImageView()
         iView.translatesAutoresizingMaskIntoConstraints = false
         iView.contentMode = .scaleAspectFill
-        iView.backgroundColor = .clear
+        iView.image = UIImage(named: "full")
         return iView
     }()
     
+    var imageTopAnchor: NSLayoutConstraint!
+    var imageLeadingAnchor: NSLayoutConstraint!
+    
+    
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
+        clipsToBounds = true
         
         addSubview(imageView)
         
-        imageView.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
-        imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
-        imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
+
+        
+        imageTopAnchor = imageView.topAnchor.constraint(equalTo: topAnchor, constant: 0)
+        imageTopAnchor.isActive = true
+        
+        
+        imageLeadingAnchor = imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0)
+        imageLeadingAnchor.isActive = true
+        imageView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 3).isActive = true
+        imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 3).isActive = true
     }
     
     required init?(coder: NSCoder) {

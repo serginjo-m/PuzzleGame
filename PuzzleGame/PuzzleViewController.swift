@@ -44,6 +44,8 @@ class PuzzleViewController: UIViewController{
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView?.frame = view.bounds
+        //TODO: use it for rotation
+        print("view bounds are: \(view.bounds)")
     }
 
 }
@@ -57,35 +59,58 @@ extension PuzzleViewController: UICollectionViewDataSource {
     //+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! PuzzleCell
-        cell.imageView.image = UIImage(named: puzzle.unSolvedImages[indexPath.item])
+//        cell.imageView.image = UIImage(named: puzzle.unSolvedImages[indexPath.item])
+        let sortedItem = puzzle.solvedImages[indexPath.item]
+        let unsortedItem = puzzle.unSolvedImages[indexPath.item]
+        if sortedItem == unsortedItem {
+            print("this is right place: " + sortedItem + " " + unsortedItem)
+        }
+        
+        switch puzzle.unSolvedImages[indexPath.item] {
+        
+        case "1":
+            cell.template = (0, 0)
+        case "2":
+            cell.template = (0, -131)
+        case "3":
+            cell.template = (0, -262)
+        case "4":
+            cell.template = (-131, 0)
+        case "5":
+            cell.template = (-131, -131)
+        case "6":
+            cell.template = (-131, -262)
+        case "7":
+            cell.template = (-262, 0)
+        case "8":
+            cell.template = (-262, -131)
+        case "9":
+            cell.template = (-262, -262)
+        default:
+            break
+        }
+        
+        
+        
+        
+        
         return cell
     }
 }
 
 extension PuzzleViewController: UICollectionViewDelegateFlowLayout {
-    //+
+    //TODO: Size
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        return CGSize(width: view.frame.size.width/3.2, height: view.frame.size.width/3.2)
-        
+
         let collectionViewWidth = collectionView.bounds.width
-        var customCollectionWidth: CGFloat!
-        
-        if puzzle.title == "StreetFighter" {
-            customCollectionWidth = collectionViewWidth/4 - 8
-        }else{
-            customCollectionWidth = collectionViewWidth/3 - 10
-        }
-        
+        let customCollectionWidth = (collectionViewWidth/3)
         return CGSize(width: customCollectionWidth, height: customCollectionWidth)
     }
 
-    //+ this method implements UIEdgeInsets for different size of puzzle
+    //TODO: Insets
+    //this method implements UIEdgeInsets for different size of puzzle
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        if puzzle.title == "StreetFighter" {
-            return UIEdgeInsets(top: 40, left: 16, bottom: 40, right: 16)
-        }else{
-            return UIEdgeInsets(top: 40, left: 10, bottom: 40, right: 10)
-        }
+            return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
     
@@ -115,9 +140,14 @@ extension PuzzleViewController: UICollectionViewDropDelegate {
     //+
     //This method tell the DropDelegate that something is happening when the user drags a cell and drops it at a new location.UICollectionViewDropProposal has four types of operation which is copy,forbidden,cancel,move.In this project I have used move operation which is to arrange the puzzles.
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        
+        
+        
         if collectionView.hasActiveDrag {
             return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
         }
+        
+        
         return UICollectionViewDropProposal(operation: .forbidden)
     }
     //+
