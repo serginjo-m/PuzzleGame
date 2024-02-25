@@ -17,6 +17,8 @@
 		CFAEA7C32B88EFDD000AD386 /* PuzzleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7C22B88EFDD000AD386 /* PuzzleCell.swift */; };
 		CFAEA7C52B892CB7000AD386 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7C42B892CB7000AD386 /* Alert.swift */; };
 		CFAEA7C92B8A7BDF000AD386 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7C82B8A7BDF000AD386 /* ImageLoader.swift */; };
+		CFAEA7D02B8B3243000AD386 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7CF2B8B3243000AD386 /* MainViewController.swift */; };
+		CFAEA7D32B8BAFCC000AD386 /* PhotoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7D22B8BAFCC000AD386 /* PhotoLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,8 @@
 		CFAEA7C22B88EFDD000AD386 /* PuzzleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleCell.swift; sourceTree = "<group>"; };
 		CFAEA7C42B892CB7000AD386 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		CFAEA7C82B8A7BDF000AD386 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		CFAEA7CF2B8B3243000AD386 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		CFAEA7D22B8BAFCC000AD386 /* PhotoLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,10 +68,12 @@
 		CFAEA7372B87E4A0000AD386 /* PuzzleGame */ = {
 			isa = PBXGroup;
 			children = (
+				CFAEA7D12B8BAFAA000AD386 /* Networking */,
 				CFAEA7C72B8A7AEA000AD386 /* Utilities */,
 				CFAEA7C12B88EFC9000AD386 /* Views */,
 				CFAEA7BD2B88EF85000AD386 /* Models */,
 				CFAEA73C2B87E4A0000AD386 /* PuzzleViewController.swift */,
+				CFAEA7CF2B8B3243000AD386 /* MainViewController.swift */,
 				CFAEA73E2B87E4A0000AD386 /* Main.storyboard */,
 				CFAEA7442B87E4A2000AD386 /* Assets.xcassets */,
 				CFAEA7462B87E4A2000AD386 /* LaunchScreen.storyboard */,
@@ -101,6 +107,14 @@
 				CFAEA7C82B8A7BDF000AD386 /* ImageLoader.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		CFAEA7D12B8BAFAA000AD386 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				CFAEA7D22B8BAFCC000AD386 /* PhotoLoader.swift */,
+			);
+			path = Networking;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,9 +192,11 @@
 				CFAEA7C52B892CB7000AD386 /* Alert.swift in Sources */,
 				CFAEA7BF2B88EF9E000AD386 /* Puzzle.swift in Sources */,
 				CFAEA73D2B87E4A0000AD386 /* PuzzleViewController.swift in Sources */,
+				CFAEA7D32B8BAFCC000AD386 /* PhotoLoader.swift in Sources */,
 				CFAEA7392B87E4A0000AD386 /* AppDelegate.swift in Sources */,
 				CFAEA7C32B88EFDD000AD386 /* PuzzleCell.swift in Sources */,
 				CFAEA73B2B87E4A0000AD386 /* SceneDelegate.swift in Sources */,
+				CFAEA7D02B8B3243000AD386 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

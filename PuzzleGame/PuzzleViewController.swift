@@ -8,27 +8,52 @@
 import UIKit
 
 class PuzzleViewController: UIViewController{
-   
- //TODO: I need loading indicator, because connection can be really slow
-    //maybe give a possibility to play default asset image
-    
+    //TODO: I need loading indicator, because connection can be really slow
+    let activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.transform = CGAffineTransform(scaleX: 1, y: 1)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.startAnimating()
+        return indicator
+    }()
     
     private var collectionView: UICollectionView?
     
     var puzzle = Puzzle(title: "StreetFighter", solvedImages: ["1", "2", "3", "4", "5", "6", "7", "8", "9"])
-    //TODO: Temp
-    var imageView = UIImageView()
+    
+    
+    
+    var puzzleImage: UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //hides puzzle collection view temporaly
-        screenElements(shouldShow: false)
         
         
-        //TODO: temp
-        if let url = URL(string: "https://picsum.photos/1024"){
-            imageView.load(url: url)
+        PhotoLoader.shared.fetchImage(from: "https://picsum.photos/1024") { imageData in
+            if let data = imageData {
+                // referenced imageView from main thread
+                // as iOS SDK warns not to use images from
+                // a background thread
+                DispatchQueue.main.async {
+                    self.puzzleImage = UIImage(data: data)
+                    self.activityIndicator.stopAnimating()
+                    self.collectionView?.reloadData()
+                }
+            } else {
+                // show as an alert if you want to
+                print("Error loading image");
+            }
         }
+        
+        
+        
+//        //TODO: temp
+//        //TODO: URL in Safe place
+//        if let url = URL(string: "https://picsum.photos/1024"){
+//            let imageV = UIImageView()
+//            imageV.imageFromURL(url: url)
+//            imageView = imageV
+//        }
         
         
         
@@ -51,29 +76,39 @@ class PuzzleViewController: UIViewController{
         
         
         view.addSubview(collectionView!)
+        view.addSubview(activityIndicator)
         
-//        navigationItem.title = "Users View"
-        view.backgroundColor = .white
-    }
-    
-    private func screenElements(shouldShow: Bool){
-        collectionView?.isHidden = !shouldShow
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        //TODO: this rotationg issue is more addressed to cell size
-//        collectionView?.frame = view.bounds
         collectionView?.translatesAutoresizingMaskIntoConstraints = false
         collectionView?.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         collectionView?.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         collectionView?.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         collectionView?.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+
+        
+        activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        activityIndicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        navigationItem.title = "Completed: %"
+        view.backgroundColor = .init(white: 0.14, alpha: 1)
+        
+        //hides puzzle collection view temporaly
+//        screenElements(shouldShow: false)
+    }
+    
+    private func screenElements(shouldShow: Bool){
+        if shouldShow {
+            self.activityIndicator.stopAnimating()
+        }
+        collectionView?.isHidden = !shouldShow
+        
+        
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        
+        //this is for rotation update
         guard let layout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout else {return}
         layout.invalidateLayout()
         collectionView?.reloadData()
@@ -91,8 +126,9 @@ extension PuzzleViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! PuzzleCell
         
-        //TODO: temp
-        cell.imageView.image = self.imageView.image
+        if let image = puzzleImage {
+            cell.imageView.image = image
+        }
         
         if let puzzleWidth = self.collectionView?.frame.width, let puzzleHeight = self.collectionView?.frame.height {
             let thirdWidth = -puzzleWidth * 0.33
