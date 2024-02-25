@@ -9,12 +9,28 @@ import UIKit
 
 class PuzzleViewController: UIViewController{
    
+ //TODO: I need loading indicator, because connection can be really slow
+    //maybe give a possibility to play default asset image
+    
+    
     private var collectionView: UICollectionView?
     
     var puzzle = Puzzle(title: "StreetFighter", solvedImages: ["1", "2", "3", "4", "5", "6", "7", "8", "9"])
+    //TODO: Temp
+    var imageView = UIImageView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //hides puzzle collection view temporaly
+        screenElements(shouldShow: false)
+        
+        
+        //TODO: temp
+        if let url = URL(string: "https://picsum.photos/1024"){
+            imageView.load(url: url)
+        }
+        
+        
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -40,6 +56,10 @@ class PuzzleViewController: UIViewController{
         view.backgroundColor = .white
     }
     
+    private func screenElements(shouldShow: Bool){
+        collectionView?.isHidden = !shouldShow
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         //TODO: this rotationg issue is more addressed to cell size
@@ -53,6 +73,7 @@ class PuzzleViewController: UIViewController{
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+        
         guard let layout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout else {return}
         layout.invalidateLayout()
         collectionView?.reloadData()
@@ -70,13 +91,16 @@ extension PuzzleViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! PuzzleCell
         
+        //TODO: temp
+        cell.imageView.image = self.imageView.image
+        
         if let puzzleWidth = self.collectionView?.frame.width, let puzzleHeight = self.collectionView?.frame.height {
             let thirdWidth = -puzzleWidth * 0.33
             let twoThirdsWidth = -puzzleWidth * 0.66
             let thirdHeight = -puzzleHeight * 0.33
             let twoThirdsHeight = -puzzleHeight * 0.66
 
-            
+            //TODO: New solution should be scaleble, keep that in mind!
             switch puzzle.unSolvedImages[indexPath.item] {
             
             case "1":
@@ -134,9 +158,11 @@ extension PuzzleViewController: UICollectionViewDragDelegate {
     
     //As you can see, in the ‘itemsForBeginning’ method we are calling our ‘dragItem’ that will deal with the dragItem to be returned. The helper method ‘dragItem’ helps us create the itemProvider with the correct string or image content, depending on the cell we are dragging.
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        
         //TODO: Seems like it has an isssue but I don't realy know how to imaplement it
         let item = self.puzzle.unSolvedImages[indexPath.item]
         let solvedItem = self.puzzle.solvedImages[indexPath.item]
+        
         //this prevents from dragging a solved cell
         if item == solvedItem {
             return [UIDragItem]()

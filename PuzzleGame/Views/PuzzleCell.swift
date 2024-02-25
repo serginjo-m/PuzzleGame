@@ -19,7 +19,6 @@ class PuzzleCell: UICollectionViewCell {
         let iView = UIImageView()
         iView.translatesAutoresizingMaskIntoConstraints = false
         iView.contentMode = .scaleAspectFill
-        iView.image = UIImage(named: "nature")
         return iView
     }()
     
