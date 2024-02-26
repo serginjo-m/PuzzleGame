@@ -10,15 +10,14 @@ import UIKit
 class MainViewController: UIViewController {
     
     lazy var playButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Play New Game", for: .normal)
         button.addTarget(self, action: #selector(handleNewGameSession), for: .touchUpInside)
         return button
     }()
     
-    @objc fileprivate func handleNewGameSession(){
-        
+    @objc func handleNewGameSession(){
         navigationController?.pushViewController(PuzzleViewController(), animated: true)
     }
     
@@ -28,10 +27,10 @@ class MainViewController: UIViewController {
     
     fileprivate func configureViews(){
         
-        view.backgroundColor = .init(white: 0.14, alpha: 1)
+        view.backgroundColor = .white
         
         let title = UILabel()
-        title.textColor = .white
+        title.textColor = .black
         title.font = .systemFont(ofSize: 24)
         title.text = "Puzzle Game"
         title.textAlignment = .center

@@ -7,10 +7,17 @@
 
 import Foundation
 import UIKit
+
+protocol PhotoLoaderServiceProtocol {
+    func getPuzzlePhoto()
+}
+
 //TODO: They would like struct over class
 class PhotoLoader {
     
     static var shared = PhotoLoader()
+    //TODO: Is it a good idea to place image here?
+//    var image: UIImage?
     
     //TODO: rename it later
     func fetchImage(from urlString: String, completionHandler: @escaping (_ data: Data?) -> ()) {

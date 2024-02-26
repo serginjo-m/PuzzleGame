@@ -19,7 +19,20 @@
 		CFAEA7C92B8A7BDF000AD386 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7C82B8A7BDF000AD386 /* ImageLoader.swift */; };
 		CFAEA7D02B8B3243000AD386 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7CF2B8B3243000AD386 /* MainViewController.swift */; };
 		CFAEA7D32B8BAFCC000AD386 /* PhotoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7D22B8BAFCC000AD386 /* PhotoLoader.swift */; };
+		CFAEA7DE2B8BED19000AD386 /* PuzzleGame_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7DD2B8BED19000AD386 /* PuzzleGame_Tests.swift */; };
+		CFAEA7E52B8BEE59000AD386 /* MainViewController_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7E42B8BEE59000AD386 /* MainViewController_Tests.swift */; };
+		CFAEA7E72B8C971C000AD386 /* PuzzleViewController_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7E62B8C971C000AD386 /* PuzzleViewController_Tests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CFAEA7DF2B8BED19000AD386 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CFAEA72D2B87E4A0000AD386 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CFAEA7342B87E4A0000AD386;
+			remoteInfo = PuzzleGame;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		CFAEA7352B87E4A0000AD386 /* PuzzleGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PuzzleGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -36,10 +49,21 @@
 		CFAEA7C82B8A7BDF000AD386 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		CFAEA7CF2B8B3243000AD386 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		CFAEA7D22B8BAFCC000AD386 /* PhotoLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLoader.swift; sourceTree = "<group>"; };
+		CFAEA7DB2B8BED19000AD386 /* PuzzleGame_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PuzzleGame_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CFAEA7DD2B8BED19000AD386 /* PuzzleGame_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleGame_Tests.swift; sourceTree = "<group>"; };
+		CFAEA7E42B8BEE59000AD386 /* MainViewController_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController_Tests.swift; sourceTree = "<group>"; };
+		CFAEA7E62B8C971C000AD386 /* PuzzleViewController_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleViewController_Tests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		CFAEA7322B87E4A0000AD386 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CFAEA7D82B8BED19000AD386 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -53,6 +77,7 @@
 			isa = PBXGroup;
 			children = (
 				CFAEA7372B87E4A0000AD386 /* PuzzleGame */,
+				CFAEA7DC2B8BED19000AD386 /* PuzzleGame_Tests */,
 				CFAEA7362B87E4A0000AD386 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -61,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				CFAEA7352B87E4A0000AD386 /* PuzzleGame.app */,
+				CFAEA7DB2B8BED19000AD386 /* PuzzleGame_Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -117,6 +143,16 @@
 			path = Networking;
 			sourceTree = "<group>";
 		};
+		CFAEA7DC2B8BED19000AD386 /* PuzzleGame_Tests */ = {
+			isa = PBXGroup;
+			children = (
+				CFAEA7DD2B8BED19000AD386 /* PuzzleGame_Tests.swift */,
+				CFAEA7E42B8BEE59000AD386 /* MainViewController_Tests.swift */,
+				CFAEA7E62B8C971C000AD386 /* PuzzleViewController_Tests.swift */,
+			);
+			path = PuzzleGame_Tests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -137,6 +173,24 @@
 			productReference = CFAEA7352B87E4A0000AD386 /* PuzzleGame.app */;
 			productType = "com.apple.product-type.application";
 		};
+		CFAEA7DA2B8BED19000AD386 /* PuzzleGame_Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CFAEA7E12B8BED19000AD386 /* Build configuration list for PBXNativeTarget "PuzzleGame_Tests" */;
+			buildPhases = (
+				CFAEA7D72B8BED19000AD386 /* Sources */,
+				CFAEA7D82B8BED19000AD386 /* Frameworks */,
+				CFAEA7D92B8BED19000AD386 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CFAEA7E02B8BED19000AD386 /* PBXTargetDependency */,
+			);
+			name = PuzzleGame_Tests;
+			productName = PuzzleGame_Tests;
+			productReference = CFAEA7DB2B8BED19000AD386 /* PuzzleGame_Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -149,6 +203,10 @@
 				TargetAttributes = {
 					CFAEA7342B87E4A0000AD386 = {
 						CreatedOnToolsVersion = 15.2;
+					};
+					CFAEA7DA2B8BED19000AD386 = {
+						CreatedOnToolsVersion = 15.2;
+						TestTargetID = CFAEA7342B87E4A0000AD386;
 					};
 				};
 			};
@@ -166,6 +224,7 @@
 			projectRoot = "";
 			targets = (
 				CFAEA7342B87E4A0000AD386 /* PuzzleGame */,
+				CFAEA7DA2B8BED19000AD386 /* PuzzleGame_Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -178,6 +237,13 @@
 				CFAEA7482B87E4A2000AD386 /* LaunchScreen.storyboard in Resources */,
 				CFAEA7452B87E4A2000AD386 /* Assets.xcassets in Resources */,
 				CFAEA7402B87E4A0000AD386 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CFAEA7D92B8BED19000AD386 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,7 +266,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CFAEA7D72B8BED19000AD386 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CFAEA7DE2B8BED19000AD386 /* PuzzleGame_Tests.swift in Sources */,
+				CFAEA7E52B8BEE59000AD386 /* MainViewController_Tests.swift in Sources */,
+				CFAEA7E72B8C971C000AD386 /* PuzzleViewController_Tests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CFAEA7E02B8BED19000AD386 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CFAEA7342B87E4A0000AD386 /* PuzzleGame */;
+			targetProxy = CFAEA7DF2B8BED19000AD386 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		CFAEA73E2B87E4A0000AD386 /* Main.storyboard */ = {
@@ -397,6 +481,42 @@
 			};
 			name = Release;
 		};
+		CFAEA7E22B8BED19000AD386 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UF353UV4DH;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Sergiy-Melnyk.PuzzleGame-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PuzzleGame.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PuzzleGame";
+			};
+			name = Debug;
+		};
+		CFAEA7E32B8BED19000AD386 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UF353UV4DH;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Sergiy-Melnyk.PuzzleGame-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PuzzleGame.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PuzzleGame";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -414,6 +534,15 @@
 			buildConfigurations = (
 				CFAEA74D2B87E4A2000AD386 /* Debug */,
 				CFAEA74E2B87E4A2000AD386 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CFAEA7E12B8BED19000AD386 /* Build configuration list for PBXNativeTarget "PuzzleGame_Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CFAEA7E22B8BED19000AD386 /* Debug */,
+				CFAEA7E32B8BED19000AD386 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

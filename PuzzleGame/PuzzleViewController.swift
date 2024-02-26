@@ -8,7 +8,9 @@
 import UIKit
 
 class PuzzleViewController: UIViewController{
-    //TODO: I need loading indicator, because connection can be really slow
+    
+    let cellId = "cellId"
+    
     let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.transform = CGAffineTransform(scaleX: 1, y: 1)
@@ -17,103 +19,98 @@ class PuzzleViewController: UIViewController{
         return indicator
     }()
     
-    private var collectionView: UICollectionView?
+    let puzzleCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = UIColor.clear
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        return collectionView
+    }()
+    
+    func setupPuzzleCollectionView(){
+        puzzleCollectionView.dragInteractionEnabled = true
+        puzzleCollectionView.dragDelegate = self
+        puzzleCollectionView.dropDelegate = self
+        puzzleCollectionView.dataSource = self
+        puzzleCollectionView.delegate = self
+        puzzleCollectionView.showsVerticalScrollIndicator = false
+        puzzleCollectionView.showsHorizontalScrollIndicator = false
+        puzzleCollectionView.register(PuzzleCell.self, forCellWithReuseIdentifier: cellId)
+    }
     
     var puzzle = Puzzle(title: "StreetFighter", solvedImages: ["1", "2", "3", "4", "5", "6", "7", "8", "9"])
-    
-    
     
     var puzzleImage: UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureScreenElements()
+        screenElements(shouldShow: false)
+        setupPuzzleCollectionView()
+        getPuzzlePhoto()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        puzzleCollectionView.reloadData()
+    }
+    
+    private func configureScreenElements(){
         
+        navigationItem.title = "Completed: %"
+        view.backgroundColor = .white
         
-        PhotoLoader.shared.fetchImage(from: "https://picsum.photos/1024") { imageData in
-            if let data = imageData {
-                // referenced imageView from main thread
-                // as iOS SDK warns not to use images from
-                // a background thread
-                DispatchQueue.main.async {
-                    self.puzzleImage = UIImage(data: data)
-                    self.activityIndicator.stopAnimating()
-                    self.collectionView?.reloadData()
-                }
-            } else {
-                // show as an alert if you want to
-                print("Error loading image");
-            }
-        }
-        
-        
-        
-//        //TODO: temp
-//        //TODO: URL in Safe place
-//        if let url = URL(string: "https://picsum.photos/1024"){
-//            let imageV = UIImageView()
-//            imageV.imageFromURL(url: url)
-//            imageView = imageV
-//        }
-        
-        
-        
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(width: view.frame.size.width/3.2,
-                                 height: view.frame.size.width/3.2)
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        
-        collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
-        collectionView?.register(PuzzleCell.self, forCellWithReuseIdentifier: "cell")
-        //-->
-        collectionView?.dragInteractionEnabled = true
-        collectionView?.dragDelegate = self
-        collectionView?.dropDelegate = self
-        //<--
-        collectionView?.delegate = self
-        collectionView?.dataSource = self
-        collectionView?.backgroundColor = .white
-        
-        
-        view.addSubview(collectionView!)
         view.addSubview(activityIndicator)
-        
-        collectionView?.translatesAutoresizingMaskIntoConstraints = false
-        collectionView?.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        collectionView?.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        collectionView?.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        collectionView?.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-
+        view.addSubview(puzzleCollectionView)
         
         activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
         activityIndicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        navigationItem.title = "Completed: %"
-        view.backgroundColor = .init(white: 0.14, alpha: 1)
         
-        //hides puzzle collection view temporaly
-//        screenElements(shouldShow: false)
+        puzzleCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        puzzleCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        puzzleCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        puzzleCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
     }
     
-    private func screenElements(shouldShow: Bool){
+    
+    func screenElements(shouldShow: Bool){
         if shouldShow {
             self.activityIndicator.stopAnimating()
         }
-        collectionView?.isHidden = !shouldShow
-        
-        
+        self.puzzleCollectionView.isHidden = !shouldShow
     }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        //this is for rotation update
-        guard let layout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout else {return}
-        layout.invalidateLayout()
-        collectionView?.reloadData()
-    }
+}
 
+extension PuzzleViewController: PhotoLoaderServiceProtocol {
+    //TODO: The problem - this func is not really testable?!
+    func getPuzzlePhoto(){
+        //TODO: Remember to include [weak self] -> because this call is async
+        PhotoLoader.shared.fetchImage(from: "https://picsum.photos/1024") { [weak self] imageData in
+            if let data = imageData {
+                // referenced imageView from main thread
+                // as iOS SDK warns not to use images from
+                // a background thread
+                //MARK: should implement solution where user gon't wait more than 3 seconds
+                /*
+                 
+                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    completion()
+                 }
+                 */
+                DispatchQueue.main.async {
+                    self?.puzzleImage = UIImage(data: data)
+                    self?.screenElements(shouldShow: true)
+                    self?.puzzleCollectionView.reloadData()
+                }
+            } else {
+                self?.puzzleImage = UIImage(named: "nature")
+            }
+        }
+    }
 }
 
 extension PuzzleViewController: UICollectionViewDataSource {
@@ -124,43 +121,44 @@ extension PuzzleViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! PuzzleCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! PuzzleCell
         
         if let image = puzzleImage {
             cell.imageView.image = image
         }
         
-        if let puzzleWidth = self.collectionView?.frame.width, let puzzleHeight = self.collectionView?.frame.height {
-            let thirdWidth = -puzzleWidth * 0.33
-            let twoThirdsWidth = -puzzleWidth * 0.66
-            let thirdHeight = -puzzleHeight * 0.33
-            let twoThirdsHeight = -puzzleHeight * 0.66
-
-            //TODO: New solution should be scaleble, keep that in mind!
-            switch puzzle.unSolvedImages[indexPath.item] {
+        let puzzleWidth = self.puzzleCollectionView.frame.width
+        let puzzleHeight = self.puzzleCollectionView.frame.height
+        let thirdWidth = -puzzleWidth * 0.33
+        let twoThirdsWidth = -puzzleWidth * 0.66
+        let thirdHeight = -puzzleHeight * 0.33
+        let twoThirdsHeight = -puzzleHeight * 0.66
+        
+        //TODO: New solution should be scaleble, keep that in mind!
+        switch puzzle.unSolvedImages[indexPath.item] {
             
-            case "1":
-                cell.template = (0, 0)
-            case "2":
-                cell.template = (0, thirdWidth)//TODO: That's not the perfect pixel solution
-            case "3":
-                cell.template = (0, twoThirdsWidth)
-            case "4":
-                cell.template = (thirdHeight, 0)
-            case "5":
-                cell.template = (thirdHeight, thirdWidth)
-            case "6":
-                cell.template = (thirdHeight, twoThirdsWidth)
-            case "7":
-                cell.template = (twoThirdsHeight, 0)
-            case "8":
-                cell.template = (twoThirdsHeight, thirdWidth)
-            case "9":
-                cell.template = (twoThirdsHeight, twoThirdsWidth)
-            default:
-                break
-            }
+        case "1":
+            cell.template = (0, 0)
+        case "2":
+            cell.template = (0, thirdWidth)//TODO: That's not the perfect pixel solution
+        case "3":
+            cell.template = (0, twoThirdsWidth)
+        case "4":
+            cell.template = (thirdHeight, 0)
+        case "5":
+            cell.template = (thirdHeight, thirdWidth)
+        case "6":
+            cell.template = (thirdHeight, twoThirdsWidth)
+        case "7":
+            cell.template = (twoThirdsHeight, 0)
+        case "8":
+            cell.template = (twoThirdsHeight, thirdWidth)
+        case "9":
+            cell.template = (twoThirdsHeight, twoThirdsWidth)
+        default:
+            break
         }
+        
         
         
         return cell
@@ -251,7 +249,7 @@ extension PuzzleViewController: UICollectionViewDropDelegate {
         
         if coordinator.proposal.operation == .move {
             self.reorderItems(coordinator: coordinator, destinationIndexPath: destinationIndexPath, collectionView: collectionView)
-            self.collectionView?.reloadData()
+            self.puzzleCollectionView.reloadData()
         }
     }
     
