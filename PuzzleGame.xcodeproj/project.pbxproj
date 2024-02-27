@@ -16,12 +16,12 @@
 		CFAEA7BF2B88EF9E000AD386 /* Puzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7BE2B88EF9E000AD386 /* Puzzle.swift */; };
 		CFAEA7C32B88EFDD000AD386 /* PuzzleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7C22B88EFDD000AD386 /* PuzzleCell.swift */; };
 		CFAEA7C52B892CB7000AD386 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7C42B892CB7000AD386 /* Alert.swift */; };
-		CFAEA7C92B8A7BDF000AD386 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7C82B8A7BDF000AD386 /* ImageLoader.swift */; };
 		CFAEA7D02B8B3243000AD386 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7CF2B8B3243000AD386 /* MainViewController.swift */; };
 		CFAEA7D32B8BAFCC000AD386 /* PhotoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7D22B8BAFCC000AD386 /* PhotoLoader.swift */; };
 		CFAEA7DE2B8BED19000AD386 /* PuzzleGame_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7DD2B8BED19000AD386 /* PuzzleGame_Tests.swift */; };
 		CFAEA7E52B8BEE59000AD386 /* MainViewController_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7E42B8BEE59000AD386 /* MainViewController_Tests.swift */; };
-		CFAEA7E72B8C971C000AD386 /* PuzzleViewController_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7E62B8C971C000AD386 /* PuzzleViewController_Tests.swift */; };
+		CFAEA7E92B8D34A1000AD386 /* PuzzleViewController_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7E82B8D34A1000AD386 /* PuzzleViewController_Tests.swift */; };
+		CFAEA7EB2B8D43EA000AD386 /* PhotoLoader_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7EA2B8D43EA000AD386 /* PhotoLoader_Tests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,13 +46,13 @@
 		CFAEA7BE2B88EF9E000AD386 /* Puzzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Puzzle.swift; sourceTree = "<group>"; };
 		CFAEA7C22B88EFDD000AD386 /* PuzzleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleCell.swift; sourceTree = "<group>"; };
 		CFAEA7C42B892CB7000AD386 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
-		CFAEA7C82B8A7BDF000AD386 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		CFAEA7CF2B8B3243000AD386 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		CFAEA7D22B8BAFCC000AD386 /* PhotoLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLoader.swift; sourceTree = "<group>"; };
 		CFAEA7DB2B8BED19000AD386 /* PuzzleGame_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PuzzleGame_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFAEA7DD2B8BED19000AD386 /* PuzzleGame_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleGame_Tests.swift; sourceTree = "<group>"; };
 		CFAEA7E42B8BEE59000AD386 /* MainViewController_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController_Tests.swift; sourceTree = "<group>"; };
-		CFAEA7E62B8C971C000AD386 /* PuzzleViewController_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleViewController_Tests.swift; sourceTree = "<group>"; };
+		CFAEA7E82B8D34A1000AD386 /* PuzzleViewController_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleViewController_Tests.swift; sourceTree = "<group>"; };
+		CFAEA7EA2B8D43EA000AD386 /* PhotoLoader_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLoader_Tests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,7 +95,6 @@
 			isa = PBXGroup;
 			children = (
 				CFAEA7D12B8BAFAA000AD386 /* Networking */,
-				CFAEA7C72B8A7AEA000AD386 /* Utilities */,
 				CFAEA7C12B88EFC9000AD386 /* Views */,
 				CFAEA7BD2B88EF85000AD386 /* Models */,
 				CFAEA73C2B87E4A0000AD386 /* PuzzleViewController.swift */,
@@ -127,14 +126,6 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		CFAEA7C72B8A7AEA000AD386 /* Utilities */ = {
-			isa = PBXGroup;
-			children = (
-				CFAEA7C82B8A7BDF000AD386 /* ImageLoader.swift */,
-			);
-			path = Utilities;
-			sourceTree = "<group>";
-		};
 		CFAEA7D12B8BAFAA000AD386 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
@@ -148,7 +139,8 @@
 			children = (
 				CFAEA7DD2B8BED19000AD386 /* PuzzleGame_Tests.swift */,
 				CFAEA7E42B8BEE59000AD386 /* MainViewController_Tests.swift */,
-				CFAEA7E62B8C971C000AD386 /* PuzzleViewController_Tests.swift */,
+				CFAEA7E82B8D34A1000AD386 /* PuzzleViewController_Tests.swift */,
+				CFAEA7EA2B8D43EA000AD386 /* PhotoLoader_Tests.swift */,
 			);
 			path = PuzzleGame_Tests;
 			sourceTree = "<group>";
@@ -254,7 +246,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CFAEA7C92B8A7BDF000AD386 /* ImageLoader.swift in Sources */,
 				CFAEA7C52B892CB7000AD386 /* Alert.swift in Sources */,
 				CFAEA7BF2B88EF9E000AD386 /* Puzzle.swift in Sources */,
 				CFAEA73D2B87E4A0000AD386 /* PuzzleViewController.swift in Sources */,
@@ -271,8 +262,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				CFAEA7DE2B8BED19000AD386 /* PuzzleGame_Tests.swift in Sources */,
+				CFAEA7EB2B8D43EA000AD386 /* PhotoLoader_Tests.swift in Sources */,
 				CFAEA7E52B8BEE59000AD386 /* MainViewController_Tests.swift in Sources */,
-				CFAEA7E72B8C971C000AD386 /* PuzzleViewController_Tests.swift in Sources */,
+				CFAEA7E92B8D34A1000AD386 /* PuzzleViewController_Tests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

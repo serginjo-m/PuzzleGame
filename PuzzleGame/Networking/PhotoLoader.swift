@@ -7,29 +7,46 @@
 
 import Foundation
 import UIKit
+//TODO: is it possible to do this a bit shorter?
+struct PhotoApi { private init() {} }
 
-protocol PhotoLoaderServiceProtocol {
-    func getPuzzlePhoto()
+extension PhotoApi {
+    
+    struct GetPhoto: PhotoLoaderServiceProtocol {
+        
+    }
 }
 
-//TODO: They would like struct over class
-class PhotoLoader {
+protocol PhotoLoaderServiceProtocol {
+    func fetchImage(completionHandler: @escaping (_ data: Data?) -> ())
     
-    static var shared = PhotoLoader()
-    //TODO: Is it a good idea to place image here?
-//    var image: UIImage?
+    var baseURL: String { get }
+}
+
+extension PhotoLoaderServiceProtocol {
     
-    //TODO: rename it later
-    func fetchImage(from urlString: String, completionHandler: @escaping (_ data: Data?) -> ()) {
+    var baseURL: String
+    {
+        return "https://picsum.photos/1024"
+    }
+    
+    //TODO: 
+    func fetchImage(completionHandler: @escaping (_ data: Data?) -> ()) {
         let session = URLSession.shared
-        let url = URL(string: urlString)
+        guard let url = URL(string: baseURL) else { completionHandler(nil); return}
         
-        let dataTask = session.dataTask(with: url!) { (data, response, error) in
+        let dataTask = session.dataTask(with: url) { (data, response, error) in
+            
+            //check if error is of some kind type, than check if data exists/ returned
+            guard (error as NSError?)?.code != NSURLErrorCancelled, data != nil else {
+                DispatchQueue.main.async { completionHandler(nil) }
+                return
+            }
+            
             if error != nil {
-                print("Error fetching the image! 😢")
-                completionHandler(nil)
+                DispatchQueue.main.async { completionHandler(nil) }
             } else {
-                completionHandler(data)
+                DispatchQueue.main.async { completionHandler(data) }
             }
         }
         

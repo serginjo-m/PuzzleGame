@@ -8,16 +8,16 @@
 import Foundation
 
 struct Puzzle: Codable {
-    var title: String
-    var solvedImages: [String]
-    var unSolvedImages: [String]
     
-    init(title: String, solvedImages: [String]) {
-        //denotes the full size image name which is used to show hint
-        self.title = title
+    var orderedItems: [String]
+    var unOredredItems: [String]
+
+    init() {
         //solved order (when to show alert: You Win!)
-        self.solvedImages = solvedImages
+        self.orderedItems = Array(1...9).map({ element in
+            return "\(element)"
+        })
         //here is a trick of mixing an array
-        self.unSolvedImages = self.solvedImages.shuffled()
+        self.unOredredItems = self.orderedItems.shuffled()
     }
 }

@@ -10,7 +10,7 @@ import UIKit
 class PuzzleViewController: UIViewController{
     
     let cellId = "cellId"
-    
+   
     let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.transform = CGAffineTransform(scaleX: 1, y: 1)
@@ -39,7 +39,7 @@ class PuzzleViewController: UIViewController{
         puzzleCollectionView.register(PuzzleCell.self, forCellWithReuseIdentifier: cellId)
     }
     
-    var puzzle = Puzzle(title: "StreetFighter", solvedImages: ["1", "2", "3", "4", "5", "6", "7", "8", "9"])
+    var puzzle = Puzzle()
     
     var puzzleImage: UIImage?
     
@@ -85,31 +85,24 @@ class PuzzleViewController: UIViewController{
     }
 }
 
-extension PuzzleViewController: PhotoLoaderServiceProtocol {
-    //TODO: The problem - this func is not really testable?!
+extension PuzzleViewController {
+    
     func getPuzzlePhoto(){
-        //TODO: Remember to include [weak self] -> because this call is async
-        PhotoLoader.shared.fetchImage(from: "https://picsum.photos/1024") { [weak self] imageData in
+        
+        PhotoApi.GetPhoto().fetchImage { [weak self] imageData in
+            
+            guard let strongSelf = self else { return }
+            
             if let data = imageData {
-                // referenced imageView from main thread
-                // as iOS SDK warns not to use images from
-                // a background thread
-                //MARK: should implement solution where user gon't wait more than 3 seconds
-                /*
-                 
-                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    completion()
-                 }
-                 */
-                DispatchQueue.main.async {
-                    self?.puzzleImage = UIImage(data: data)
-                    self?.screenElements(shouldShow: true)
-                    self?.puzzleCollectionView.reloadData()
-                }
+                strongSelf.puzzleImage = UIImage(data: data)
+                strongSelf.screenElements(shouldShow: true)
+                strongSelf.puzzleCollectionView.reloadData()
             } else {
-                self?.puzzleImage = UIImage(named: "nature")
+                //TODO: strongSelf.showAlert()
+                strongSelf.puzzleImage = UIImage(named: "nature")
             }
         }
+        
     }
 }
 
@@ -117,7 +110,7 @@ extension PuzzleViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return puzzle.unSolvedImages.count
+        return puzzle.unOredredItems.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -127,39 +120,25 @@ extension PuzzleViewController: UICollectionViewDataSource {
             cell.imageView.image = image
         }
         
+        //TODO: unsafe
+        let index = (Int(puzzle.unOredredItems[indexPath.item]) ?? 0) - 1
+        
+        let rowDivider = CGFloat(index % 3)
+        let colDivider = CGFloat(index / 3)
+        
+
+        //TODO: Not a pixel perfect solution
+        //TODO: Should I move all this logic inside a ViewModel?
         let puzzleWidth = self.puzzleCollectionView.frame.width
         let puzzleHeight = self.puzzleCollectionView.frame.height
-        let thirdWidth = -puzzleWidth * 0.33
-        let twoThirdsWidth = -puzzleWidth * 0.66
-        let thirdHeight = -puzzleHeight * 0.33
-        let twoThirdsHeight = -puzzleHeight * 0.66
+        let thirdWidth = -puzzleWidth / 3
+        let thirdHeight = -puzzleHeight / 3
         
-        //TODO: New solution should be scaleble, keep that in mind!
-        switch puzzle.unSolvedImages[indexPath.item] {
-            
-        case "1":
-            cell.template = (0, 0)
-        case "2":
-            cell.template = (0, thirdWidth)//TODO: That's not the perfect pixel solution
-        case "3":
-            cell.template = (0, twoThirdsWidth)
-        case "4":
-            cell.template = (thirdHeight, 0)
-        case "5":
-            cell.template = (thirdHeight, thirdWidth)
-        case "6":
-            cell.template = (thirdHeight, twoThirdsWidth)
-        case "7":
-            cell.template = (twoThirdsHeight, 0)
-        case "8":
-            cell.template = (twoThirdsHeight, thirdWidth)
-        case "9":
-            cell.template = (twoThirdsHeight, twoThirdsWidth)
-        default:
-            break
-        }
+        let leftMargin: CGFloat = rowDivider == 0 ? 0 : thirdWidth * rowDivider
+        let topMargin: CGFloat = colDivider == 0 ? 0 : thirdHeight * colDivider
         
         
+        cell.template = (topMargin, leftMargin)
         
         return cell
     }
@@ -168,8 +147,8 @@ extension PuzzleViewController: UICollectionViewDataSource {
 extension PuzzleViewController: UICollectionViewDelegateFlowLayout {
     //TODO: Size
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            let collectionViewHeight = collectionView.bounds.height/3//TODO: Not a perfect pixel size
-            let collectionViewWidth = collectionView.bounds.width/3
+            let collectionViewHeight = collectionView.frame.height / 3//TODO: Not a perfect pixel size
+            let collectionViewWidth = collectionView.frame.width / 3
             return CGSize(width: collectionViewWidth, height: collectionViewHeight)
     }
 
@@ -194,8 +173,8 @@ extension PuzzleViewController: UICollectionViewDragDelegate {
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         
         //TODO: Seems like it has an isssue but I don't realy know how to imaplement it
-        let item = self.puzzle.unSolvedImages[indexPath.item]
-        let solvedItem = self.puzzle.solvedImages[indexPath.item]
+        let item = self.puzzle.unOredredItems[indexPath.item]
+        let solvedItem = self.puzzle.orderedItems[indexPath.item]
         
         //this prevents from dragging a solved cell
         if item == solvedItem {
@@ -218,8 +197,8 @@ extension PuzzleViewController: UICollectionViewDropDelegate {
         
         if let destinationItem = destinationIndexPath{
             
-            let item = self.puzzle.unSolvedImages[destinationItem.item]
-            let solvedItem = self.puzzle.solvedImages[destinationItem.item]
+            let item = self.puzzle.unOredredItems[destinationItem.item]
+            let solvedItem = self.puzzle.orderedItems[destinationItem.item]
             
             if item == solvedItem {
                 return UICollectionViewDropProposal(operation: .forbidden)
@@ -256,7 +235,7 @@ extension PuzzleViewController: UICollectionViewDropDelegate {
     fileprivate func reorderItems(coordinator: UICollectionViewDropCoordinator, destinationIndexPath: IndexPath, collectionView: UICollectionView) {
         if let item = coordinator.items.first, let sourceIndexPath = item.sourceIndexPath{
             collectionView.performBatchUpdates {
-                puzzle.unSolvedImages.swapAt(sourceIndexPath.item, destinationIndexPath.item)
+                puzzle.unOredredItems.swapAt(sourceIndexPath.item, destinationIndexPath.item)
                 collectionView.reloadItems(at: [sourceIndexPath, destinationIndexPath])
             }
             coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
@@ -266,7 +245,7 @@ extension PuzzleViewController: UICollectionViewDropDelegate {
     
     //this method is called every time a item is dropped and checks everytime if puzzle is solved or not.If unsolvedImage array equals to solved image array. Change dragInteractionEnabled to false to tell user that puzzle has solved and show Alert .Enable rightBarbutton to true to navigate to next puzzle.
     func collectionView(_ collectionView: UICollectionView, dropSessionDidEnd session: UIDropSession) {
-        if puzzle.unSolvedImages == puzzle.solvedImages {
+        if puzzle.unOredredItems == puzzle.orderedItems {
             Alert.showSolvedPuzzleAlert(on: self)
             collectionView.dragInteractionEnabled = false
         }
