@@ -34,6 +34,7 @@ class MainViewController: UIViewController {
     }()
     
     @objc func handleNewGameSession(){
+        //hides navigation bar
         navigationController?.setNavigationBarHidden(true, animated: false)
         navigationController?.pushViewController(PuzzleViewController(), animated: true)
     }

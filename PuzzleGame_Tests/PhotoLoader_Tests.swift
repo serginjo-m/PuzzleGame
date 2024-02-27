@@ -7,16 +7,6 @@
 
 import XCTest
 @testable import PuzzleGame
-//Naming Structure: test_UnitOfWork_StateUnderTest_ExpectedBehavior
-//->Naming Structure: test_[struct or class]_[variable or func]_[expected result]
-
-//Given (Arrange)
-
-//When (Act)
-
-//Then (Assert)
-
-
 
 final class PhotoLoader_Tests: XCTestCase {
 
@@ -28,8 +18,7 @@ final class PhotoLoader_Tests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
     
-    
-    //don't really like this approach
+    //test if loader fetch image
     func test_PhotoLoader_fetchImage_shouldReturnImage(){
         //Given (Arrange)
         let loader = PhotoApi.GetPhoto()

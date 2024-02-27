@@ -8,9 +8,10 @@
 import Foundation
 
 struct TileViewModel {
-    
-    let leftMargin: CGFloat
-    let topMargin: CGFloat
+    //image left padding
+    let leftPadding: CGFloat
+    //image top padding
+    let topPadding: CGFloat
     
     init(width: CGFloat, height: CGFloat, index: Int){
         //calculates tile row position
@@ -19,11 +20,12 @@ struct TileViewModel {
         let colDivider = CGFloat(index / 3)
         //screen rotation require using of smallest side
         let minSide = min(width, height)
-        //for 3 X 3 puzzle, .....
-        let tileSizeDimensionMargin = -minSide / 3
+        //padding measurement unit is one tile size
+        let tileSizeDimensionPadding = -minSide / 3
         
-        self.leftMargin = rowDivider == 0 ? 0 : tileSizeDimensionMargin * rowDivider
-        self.topMargin = colDivider == 0 ? 0 : tileSizeDimensionMargin * colDivider
+        //calculate image padding based on tile position in grid
+        self.leftPadding = rowDivider == 0 ? 0 : tileSizeDimensionPadding * rowDivider
+        self.topPadding = colDivider == 0 ? 0 : tileSizeDimensionPadding * colDivider
     }
     
 }

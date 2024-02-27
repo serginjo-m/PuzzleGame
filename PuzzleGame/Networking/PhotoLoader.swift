@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-//router error cases enum
+//possible errors
 enum ServiceError: Error {
     case invalidBaseUrl
     case noData
@@ -39,11 +39,10 @@ extension PhotoLoaderServiceProtocol {
         return "https://picsum.photos/1024"
     }
     
-    //TODO: Definitely should test this THROWS
     func fetchImage(completionHandler: @escaping (Outcome<UIImage>) -> ()) {
         
         let session = URLSession.shared
-        
+        //if baseURL can't be converted into URL address - escapes
         guard let url = URL(string: baseURL) else {
             completionHandler(.failure(ServiceError.invalidBaseUrl))
             return
@@ -51,30 +50,26 @@ extension PhotoLoaderServiceProtocol {
         
         let dataTask = session.dataTask(with: url) { (data, response, error) in
             
-            //check if error is of some kind type, than check if data exists/ returned
+            //check if error is of canceled and if data exists
             guard (error as NSError?)?.code != NSURLErrorCancelled, data != nil else {
-                //completion(.failure(NetworkResponse.cancelled))
                 DispatchQueue.main.async { completionHandler(.failure(ServiceError.cancelled)) }
                 return
             }
             
-            //check if data exists
-            guard let responseData = data else{
+            guard let responseData = data else {
                 //exits from function with a completion handler of type .noData
                 DispatchQueue.main.async { completionHandler(.failure(ServiceError.noData)) }
                 return
             }
             
-            //try to parse data models into array of "ExpectedResponseModelType"
-            guard let image: UIImage = UIImage(data: responseData) else
-            {
-                //exits from func with a completion handler of type .unableToDecode
+            //try to initialize image with data
+            guard let image: UIImage = UIImage(data: responseData) else {
+                //exits from func with a completion handler of type unableToInitialize
                 DispatchQueue.main.async { completionHandler(.failure(ServiceError.unableToInitialize )) }
                 return
             }
-            
+            //success
             DispatchQueue.main.async { completionHandler(.success(image)) }
-            
         }
         
         dataTask.resume()

@@ -7,12 +7,14 @@
 
 import UIKit
 class TileCell: UICollectionViewCell {
-    //TODO: How about include some test between view model and cell?
+    
     var tileViewModel: TileViewModel? {
         didSet{
             guard let tileViewModel = tileViewModel else {return}
-            self.imageTopAnchor.constant = tileViewModel.topMargin
-            self.imageLeadingAnchor.constant = tileViewModel.leftMargin
+            //set image top padding
+            self.imageTopAnchor.constant = tileViewModel.topPadding
+            //set image left padding
+            self.imageLeadingAnchor.constant = tileViewModel.leftPadding
         }
     }
     
@@ -23,6 +25,7 @@ class TileCell: UICollectionViewCell {
         return iView
     }()
     
+    //using constant parameter of this two constraints can update image padding dynamicaly
     var imageTopAnchor: NSLayoutConstraint!
     var imageLeadingAnchor: NSLayoutConstraint!
     

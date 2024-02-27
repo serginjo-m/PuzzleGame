@@ -12,7 +12,7 @@ import UIKit
 class PuzzleViewController: UIViewController{
     
     let cellId = "cellId"
-    
+    //shows when 
     let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.transform = CGAffineTransform(scaleX: 1, y: 1)
@@ -20,6 +20,18 @@ class PuzzleViewController: UIViewController{
         indicator.color = .black
         indicator.startAnimating()
         return indicator
+    }()
+    
+    let moveMessageText: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Position is OK!"
+        label.font = .boldSystemFont(ofSize: 20)
+        label.textAlignment = .center
+        label.backgroundColor = .systemYellow
+        label.alpha = 0
+        label.textColor = .label
+        return label
     }()
     
     lazy var dismissButton: UIButton = {
@@ -43,6 +55,7 @@ class PuzzleViewController: UIViewController{
         collectionView.backgroundColor = UIColor.clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.isHidden = true
+        collectionView.isScrollEnabled = false
         return collectionView
     }()
     
@@ -76,30 +89,32 @@ class PuzzleViewController: UIViewController{
 }
 
 extension PuzzleViewController {
-    
+
     func getPuzzlePhoto(){
-        
+        //try to fetch image from server
         PhotoApi.GetPhoto().fetchImage { [weak self] outcome in
             
             guard let strongSelf = self else { return }
             
             switch outcome {
-
+            //success case where server returns image
             case .success(let image):
                 strongSelf.puzzleImage = image
+            //case where fetch service fails to get image
             case .failure(let error):
                 if let responseError = error as? ServiceError {
-                    //TODO: not the best but ....
                     print("Failed with ServiceErrorType: \(responseError)")
                 }
+                //set puzzle image to default asset
                 strongSelf.puzzleImage = UIImage(named: "nature")
             }
-            
+            //hide activity indicator and show collection view
             strongSelf.screenElements(shouldShow: true)
+            //update collection view with new image
             strongSelf.puzzleCollectionView.reloadData()
         }
     }
-    
+    //show/hides indicator & collectionView
     func screenElements(shouldShow: Bool){
         if shouldShow {
             self.activityIndicator.stopAnimating()
@@ -120,7 +135,15 @@ extension PuzzleViewController {
         alertController.addAction(okayAction)
         present(alertController, animated: true)
     }
-    
+    //shows message for correct tile
+    func showInfoMessage(){
+        self.moveMessageText.alpha = 1
+        
+        UIView.animate(withDuration: 1, delay: 1, usingSpringWithDamping: 1, initialSpringVelocity: 0) {
+            self.moveMessageText.alpha = 0
+        }
+    }
+    //configure page elements
     private func configureScreenElements(){
         
         navigationItem.title = "Completed: %"
@@ -129,6 +152,7 @@ extension PuzzleViewController {
         view.addSubview(activityIndicator)
         view.addSubview(puzzleCollectionView)
         view.addSubview(dismissButton)
+        view.addSubview(moveMessageText)
         
         
         activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -146,11 +170,16 @@ extension PuzzleViewController {
         dismissButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
         dismissButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
         dismissButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        moveMessageText.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
+        moveMessageText.topAnchor.constraint(equalTo: dismissButton.bottomAnchor, constant: 20).isActive = true
+        moveMessageText.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        moveMessageText.widthAnchor.constraint(equalToConstant: 206).isActive = true
     }
 }
 
 extension PuzzleViewController: UICollectionViewDataSource {
-    
+    //tile count
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         return puzzle.unOredredItems.count
@@ -158,9 +187,9 @@ extension PuzzleViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! TileCell
-        
+        //set single image for every cell
         if let image = puzzleImage { cell.imageView.image = image }
-        
+        //get current value from unordered items
         let index = puzzle.unOredredItems[indexPath.item]
         
         cell.tileViewModel = TileViewModel(width: puzzleCollectionView.frame.width,
@@ -203,9 +232,12 @@ extension PuzzleViewController: UICollectionViewDragDelegate {
         
         let item = self.puzzle.unOredredItems[indexPath.item]
         
-        //prevents from dragging a solved tile
-        //if tile in the correct position & droped here by user
-        if checkForCorrectPosition(index: indexPath.item) && self.puzzle.userCorrectDrop[indexPath.item] != nil{
+        
+        //if tile in the correct position
+        if checkForCorrectPosition(index: indexPath.item){
+            //show info message to user
+            self.showInfoMessage()
+            //prevents from dragging a solved tile
             return [UIDragItem]()
         }
         
@@ -229,15 +261,13 @@ extension PuzzleViewController: UICollectionViewDragDelegate {
         
         if let item = coordinator.items.first, let sourceIndexPath = item.sourceIndexPath{
             collectionView.performBatchUpdates {
+                //perform swapping inside puzzle object
                 puzzle.unOredredItems.swapAt(sourceIndexPath.item, destinationIndexPath.item)
+                //perform swapping inside collectionView
                 collectionView.reloadItems(at: [sourceIndexPath, destinationIndexPath])
             }
+            //dropping item
             coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
-            //if drop is correct
-            if checkForCorrectPosition(index: destinationIndexPath.item){
-                //save to user correct movements
-                puzzle.userCorrectDrop[destinationIndexPath.item] = destinationIndexPath.item
-            }
         }
         
     }
@@ -248,8 +278,8 @@ extension PuzzleViewController: UICollectionViewDropDelegate {
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
         
         if let destinationItem = destinationIndexPath{
-            //check if destination tile is in correct position and droped here by user
-            if checkForCorrectPosition(index: destinationItem.item) && puzzle.userCorrectDrop[destinationItem.item] != nil {
+            //check if destination tile is in correct position
+            if checkForCorrectPosition(index: destinationItem.item) {
                 //block this position for dropping current tile
                 return UICollectionViewDropProposal(operation: .forbidden)
             }

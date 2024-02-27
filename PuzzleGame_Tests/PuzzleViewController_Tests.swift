@@ -8,19 +8,6 @@
 import XCTest
 @testable import PuzzleGame
 
-//Naming Structure: test_UnitOfWork_StateUnderTest_ExpectedBehavior
-//->Naming Structure: test_[struct or class]_[variable or func]_[expected result]
-
-
-//Testing Stucture:
-
-//Given (Arrange)
-
-//When (Act)
-
-//Then (Assert)
-
-
 final class PuzzleViewController_Tests: XCTestCase {
 
     override func setUpWithError() throws {

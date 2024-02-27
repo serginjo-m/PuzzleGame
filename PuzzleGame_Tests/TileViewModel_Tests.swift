@@ -29,22 +29,22 @@ final class TileViewModel_Tests: XCTestCase {
     //Make sure view model convert input properly for the first tile
     func test_TileViewModel_margin_shouldConvertProperly(){
         //Given (Arrange)
-        let tileViewModel = TileViewModel(width: 600, height: 800, index: 0)
-        //When (Act)
         
+        //When (Act)
+        let tileViewModel = TileViewModel(width: 600, height: 800, index: 0)
         //Then (Assert)
-        XCTAssertEqual(tileViewModel.leftMargin, 0)
-        XCTAssertEqual(tileViewModel.topMargin, tileViewModel.leftMargin)
+        XCTAssertEqual(tileViewModel.leftPadding, 0)
+        XCTAssertEqual(tileViewModel.topPadding, tileViewModel.leftPadding)
     }
     //In 3 X 3 size puzzle the last tile should have top and left margin = 2/3 of min size
     func test_TileViewModel_margin_calculateInputForLastTile(){
         //Given (Arrange)
-        let tileViewModel = TileViewModel(width: 800, height: 600, index: 8)
-        //When (Act)
         
+        //When (Act)
+        let tileViewModel = TileViewModel(width: 800, height: 600, index: 8)
         //Then (Assert)
-        XCTAssertEqual(tileViewModel.leftMargin, -400)
-        XCTAssertEqual(tileViewModel.topMargin, tileViewModel.leftMargin)
+        XCTAssertEqual(tileViewModel.leftPadding, -400)
+        XCTAssertEqual(tileViewModel.topPadding, tileViewModel.leftPadding)
     }
 
 }
