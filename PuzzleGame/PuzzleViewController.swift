@@ -84,7 +84,7 @@ extension PuzzleViewController {
             guard let strongSelf = self else { return }
             
             switch outcome {
-                
+
             case .success(let image):
                 strongSelf.puzzleImage = image
             case .failure(let error):
@@ -129,6 +129,7 @@ extension PuzzleViewController {
         view.addSubview(activityIndicator)
         view.addSubview(puzzleCollectionView)
         view.addSubview(dismissButton)
+        
         
         activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
@@ -176,21 +177,20 @@ extension PuzzleViewController: UICollectionViewDelegateFlowLayout {
             let height = collectionView.frame.height
             let width = collectionView.frame.width
         
-            let edgeSize = width <= height ? width / 3 : height / 3 //TODO: NOt pixel perfect solution
+            let edgeSize = width <= height ? width / 3 : height / 3 
             
             return CGSize(width: edgeSize, height: edgeSize)
     }
 
     //Insets
-    //this method implements UIEdgeInsets for different size of puzzle
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
             return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
-    
+    //min line spacing
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-    
+    //min interitem spacing
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
@@ -198,60 +198,76 @@ extension PuzzleViewController: UICollectionViewDelegateFlowLayout {
 
 extension PuzzleViewController: UICollectionViewDragDelegate {
     
-    //As you can see, in the ‘itemsForBeginning’ method we are calling our ‘dragItem’ that will deal with the dragItem to be returned. The helper method ‘dragItem’ helps us create the itemProvider with the correct string or image content, depending on the cell we are dragging.
+    //provides the initial set of items (if any) to drag
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         
-        
         let item = self.puzzle.unOredredItems[indexPath.item]
-        let solvedItem = self.puzzle.orderedItems[indexPath.item]
-        //TODO: fix blocked && untouched cells
-        //this prevents from dragging a solved cell
-        if item == solvedItem {
+        
+        //prevents from dragging a solved tile
+        //if tile in the correct position & droped here by user
+        if checkForCorrectPosition(index: indexPath.item) && self.puzzle.userCorrectDrop[indexPath.item] != nil{
             return [UIDragItem]()
         }
         
-        
-        //TODO: want to be sure this convertion doesn't slow down all movements
-        //NSItemProviderWriting
+        //create provider with current item value
         let itemProvider = NSItemProvider(object: String(item) as NSString)
+        //A representation of an underlying data item being dragged from one location to another.
         let dragItem = UIDragItem(itemProvider: itemProvider)
+        // associate a custom object with the drag item.
         dragItem.localObject = dragItem
         return [dragItem]
+    }
+    //compare current item to correct item inside puzzle object
+    func checkForCorrectPosition(index: Int) -> Bool {
+        let orderedItems = self.puzzle.orderedItems
+        let unOrderedItems = self.puzzle.unOredredItems
+        return orderedItems[index] == unOrderedItems[index]
+    }
+    
+    //swap items inside puzzle object and collection view
+    fileprivate func handleReorderItems(coordinator: UICollectionViewDropCoordinator, destinationIndexPath: IndexPath, collectionView: UICollectionView) {
+        
+        if let item = coordinator.items.first, let sourceIndexPath = item.sourceIndexPath{
+            collectionView.performBatchUpdates {
+                puzzle.unOredredItems.swapAt(sourceIndexPath.item, destinationIndexPath.item)
+                collectionView.reloadItems(at: [sourceIndexPath, destinationIndexPath])
+            }
+            coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
+            //if drop is correct
+            if checkForCorrectPosition(index: destinationIndexPath.item){
+                //save to user correct movements
+                puzzle.userCorrectDrop[destinationIndexPath.item] = destinationIndexPath.item
+            }
+        }
+        
     }
 }
 
 extension PuzzleViewController: UICollectionViewDropDelegate {
-    /*
-        This method tell the DropDelegate that something is happening when the user drags a cell and drops it at a new location.
-        UICollectionViewDropProposal has four types of operation which is copy,forbidden,cancel,move.In this project I have used move operation which is to arrange the puzzles.
-     */
+    
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
         
-        
         if let destinationItem = destinationIndexPath{
-            
-            let item = self.puzzle.unOredredItems[destinationItem.item]
-            let solvedItem = self.puzzle.orderedItems[destinationItem.item]
-            
-            if item == solvedItem {
+            //check if destination tile is in correct position and droped here by user
+            if checkForCorrectPosition(index: destinationItem.item) && puzzle.userCorrectDrop[destinationItem.item] != nil {
+                //block this position for dropping current tile
                 return UICollectionViewDropProposal(operation: .forbidden)
             }
         }
-        
+        //indicates whether items were lifted and have not yet been dropped.
         if collectionView.hasActiveDrag {
+            //drop item
             return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
         }
-        
+        //cancel
         return UICollectionViewDropProposal(operation: .forbidden)
     }
     
-    /*  Use this method to accept the dropped content and integrate it into your collection view.
-        In your implementation, iterate over the items property of the coordinator object and fetch the data from each UIDragItem.
-        Incorporate the data into your collection view's data source and update the collection view itself by inserting any needed items.
-        When incorporating items, use the methods of the coordinator object to animate the transition from the drag item's preview to the corresponding item in your collection view.We have calculating whether or not the cell will be dropped out of bounds.
-     */
+    
+    //confirm droping item and insert into collection view
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         var destinationIndexPath: IndexPath
+        //get IndexPath from coordinator
         if let indexPath = coordinator.destinationIndexPath {
             destinationIndexPath = indexPath
         }else{
@@ -260,26 +276,18 @@ extension PuzzleViewController: UICollectionViewDropDelegate {
         }
         
         if coordinator.proposal.operation == .move {
-            self.reorderItems(coordinator: coordinator, destinationIndexPath: destinationIndexPath, collectionView: collectionView)
+            //swap tile, update puzzle object
+            self.handleReorderItems(coordinator: coordinator, destinationIndexPath: destinationIndexPath, collectionView: collectionView)
             self.puzzleCollectionView.reloadData()
         }
     }
-    
-    fileprivate func reorderItems(coordinator: UICollectionViewDropCoordinator, destinationIndexPath: IndexPath, collectionView: UICollectionView) {
-        if let item = coordinator.items.first, let sourceIndexPath = item.sourceIndexPath{
-            collectionView.performBatchUpdates {
-                puzzle.unOredredItems.swapAt(sourceIndexPath.item, destinationIndexPath.item)
-                collectionView.reloadItems(at: [sourceIndexPath, destinationIndexPath])
-            }
-            coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
-        }
-        
-    }
-    
-    //this method is called every time a item is dropped and checks everytime if puzzle is solved or not.If unsolvedImage array equals to solved image array. Change dragInteractionEnabled to false to tell user that puzzle has solved and show Alert .Enable rightBarbutton to true to navigate to next puzzle.
+    //end of drop session
     func collectionView(_ collectionView: UICollectionView, dropSessionDidEnd session: UIDropSession) {
+        //in the end of every drop session checks if puzzle is solved
         if puzzle.unOredredItems == puzzle.orderedItems {
+            //if solved, shows congrats
             self.showCongratsAlert()
+            //disable any dragg interaction
             collectionView.dragInteractionEnabled = false
         }
     }

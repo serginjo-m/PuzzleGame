@@ -9,16 +9,13 @@ import Foundation
 import UIKit
 
 //router error cases enum
-enum ServiceError: Error
-{
+enum ServiceError: Error {
     case invalidBaseUrl
     case noData
     case cancelled
     case unableToInitialize
 }
 
-
-//TODO: is it possible to do this a bit shorter?
 struct PhotoApi { private init() {} }
 
 extension PhotoApi {
