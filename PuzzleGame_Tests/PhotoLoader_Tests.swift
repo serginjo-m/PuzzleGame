@@ -79,7 +79,7 @@ final class PhotoLoader_Tests: XCTestCase {
     func test_PhotoLoader_baseURL_shouldBeValidURLString(){
         //Given (Arrange)
         let loader = PhotoApi.GetPhoto()
-        var baseUrl = loader.baseURL
+        let baseUrl = loader.baseURL
         //When (Act)
         let validUrl = URL(string: baseUrl)
         //Then (Assert)

@@ -14,12 +14,14 @@
 		CFAEA7452B87E4A2000AD386 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFAEA7442B87E4A2000AD386 /* Assets.xcassets */; };
 		CFAEA7482B87E4A2000AD386 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CFAEA7462B87E4A2000AD386 /* LaunchScreen.storyboard */; };
 		CFAEA7BF2B88EF9E000AD386 /* Puzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7BE2B88EF9E000AD386 /* Puzzle.swift */; };
-		CFAEA7C32B88EFDD000AD386 /* PuzzleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7C22B88EFDD000AD386 /* PuzzleCell.swift */; };
+		CFAEA7C32B88EFDD000AD386 /* TileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7C22B88EFDD000AD386 /* TileCell.swift */; };
 		CFAEA7D02B8B3243000AD386 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7CF2B8B3243000AD386 /* MainViewController.swift */; };
 		CFAEA7D32B8BAFCC000AD386 /* PhotoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7D22B8BAFCC000AD386 /* PhotoLoader.swift */; };
 		CFAEA7E92B8D34A1000AD386 /* PuzzleViewController_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7E82B8D34A1000AD386 /* PuzzleViewController_Tests.swift */; };
 		CFAEA7EB2B8D43EA000AD386 /* PhotoLoader_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7EA2B8D43EA000AD386 /* PhotoLoader_Tests.swift */; };
 		CFAEA7ED2B8DE348000AD386 /* Outcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7EC2B8DE348000AD386 /* Outcome.swift */; };
+		CFAEA7F02B8E43C1000AD386 /* TileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7EF2B8E43C1000AD386 /* TileViewModel.swift */; };
+		CFAEA7F22B8E5707000AD386 /* TileViewModel_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAEA7F12B8E5707000AD386 /* TileViewModel_Tests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,13 +44,15 @@
 		CFAEA7472B87E4A2000AD386 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CFAEA7492B87E4A2000AD386 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CFAEA7BE2B88EF9E000AD386 /* Puzzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Puzzle.swift; sourceTree = "<group>"; };
-		CFAEA7C22B88EFDD000AD386 /* PuzzleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleCell.swift; sourceTree = "<group>"; };
+		CFAEA7C22B88EFDD000AD386 /* TileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileCell.swift; sourceTree = "<group>"; };
 		CFAEA7CF2B8B3243000AD386 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		CFAEA7D22B8BAFCC000AD386 /* PhotoLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLoader.swift; sourceTree = "<group>"; };
 		CFAEA7DB2B8BED19000AD386 /* PuzzleGame_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PuzzleGame_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFAEA7E82B8D34A1000AD386 /* PuzzleViewController_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleViewController_Tests.swift; sourceTree = "<group>"; };
 		CFAEA7EA2B8D43EA000AD386 /* PhotoLoader_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLoader_Tests.swift; sourceTree = "<group>"; };
 		CFAEA7EC2B8DE348000AD386 /* Outcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Outcome.swift; sourceTree = "<group>"; };
+		CFAEA7EF2B8E43C1000AD386 /* TileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileViewModel.swift; sourceTree = "<group>"; };
+		CFAEA7F12B8E5707000AD386 /* TileViewModel_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileViewModel_Tests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +94,7 @@
 		CFAEA7372B87E4A0000AD386 /* PuzzleGame */ = {
 			isa = PBXGroup;
 			children = (
+				CFAEA7EE2B8E4382000AD386 /* ViewModel */,
 				CFAEA7D12B8BAFAA000AD386 /* Networking */,
 				CFAEA7C12B88EFC9000AD386 /* Views */,
 				CFAEA7BD2B88EF85000AD386 /* Models */,
@@ -116,7 +121,7 @@
 		CFAEA7C12B88EFC9000AD386 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				CFAEA7C22B88EFDD000AD386 /* PuzzleCell.swift */,
+				CFAEA7C22B88EFDD000AD386 /* TileCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -135,8 +140,17 @@
 			children = (
 				CFAEA7E82B8D34A1000AD386 /* PuzzleViewController_Tests.swift */,
 				CFAEA7EA2B8D43EA000AD386 /* PhotoLoader_Tests.swift */,
+				CFAEA7F12B8E5707000AD386 /* TileViewModel_Tests.swift */,
 			);
 			path = PuzzleGame_Tests;
+			sourceTree = "<group>";
+		};
+		CFAEA7EE2B8E4382000AD386 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				CFAEA7EF2B8E43C1000AD386 /* TileViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -245,7 +259,8 @@
 				CFAEA73D2B87E4A0000AD386 /* PuzzleViewController.swift in Sources */,
 				CFAEA7D32B8BAFCC000AD386 /* PhotoLoader.swift in Sources */,
 				CFAEA7392B87E4A0000AD386 /* AppDelegate.swift in Sources */,
-				CFAEA7C32B88EFDD000AD386 /* PuzzleCell.swift in Sources */,
+				CFAEA7F02B8E43C1000AD386 /* TileViewModel.swift in Sources */,
+				CFAEA7C32B88EFDD000AD386 /* TileCell.swift in Sources */,
 				CFAEA73B2B87E4A0000AD386 /* SceneDelegate.swift in Sources */,
 				CFAEA7D02B8B3243000AD386 /* MainViewController.swift in Sources */,
 			);
@@ -257,6 +272,7 @@
 			files = (
 				CFAEA7EB2B8D43EA000AD386 /* PhotoLoader_Tests.swift in Sources */,
 				CFAEA7E92B8D34A1000AD386 /* PuzzleViewController_Tests.swift in Sources */,
+				CFAEA7F22B8E5707000AD386 /* TileViewModel_Tests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

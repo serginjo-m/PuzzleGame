@@ -7,16 +7,33 @@
 
 import UIKit
 
+
+
 class PuzzleViewController: UIViewController{
     
     let cellId = "cellId"
-   
+    
     let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.transform = CGAffineTransform(scaleX: 1, y: 1)
         indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.color = .black
         indicator.startAnimating()
         return indicator
+    }()
+    
+    lazy var dismissButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Cancel", for: .normal)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 16)
+        button.backgroundColor = .link
+        button.titleLabel?.textAlignment = .center
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 4
+        button.clipsToBounds = true
+        button.addTarget(self, action: #selector(dismissViewController), for: .touchUpInside)
+        return button
     }()
     
     let puzzleCollectionView: UICollectionView = {
@@ -37,7 +54,7 @@ class PuzzleViewController: UIViewController{
         puzzleCollectionView.delegate = self
         puzzleCollectionView.showsVerticalScrollIndicator = false
         puzzleCollectionView.showsHorizontalScrollIndicator = false
-        puzzleCollectionView.register(PuzzleCell.self, forCellWithReuseIdentifier: cellId)
+        puzzleCollectionView.register(TileCell.self, forCellWithReuseIdentifier: cellId)
     }
     
     var puzzle = Puzzle()
@@ -56,47 +73,9 @@ class PuzzleViewController: UIViewController{
         super.viewWillLayoutSubviews()
         puzzleCollectionView.reloadData()
     }
-    
-    private func configureScreenElements(){
-        
-        navigationItem.title = "Completed: %"
-        view.backgroundColor = .white
-        
-        view.addSubview(activityIndicator)
-        view.addSubview(puzzleCollectionView)
-        
-        activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        activityIndicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        
-        puzzleCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        puzzleCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        puzzleCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        puzzleCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-    }
-    
-    
-    func screenElements(shouldShow: Bool){
-        if shouldShow {
-            self.activityIndicator.stopAnimating()
-        }
-        self.puzzleCollectionView.isHidden = !shouldShow
-    }
 }
 
 extension PuzzleViewController {
-    
-    //An alert window with message
-    private func showErrorAlert() {
-        let alertController = UIAlertController(title: "Congratulations!", message: "You have solved this puzzle", preferredStyle: .alert)
-        let okayAction = UIAlertAction(title: "okay", style: .default) { _ in
-            self.navigationController?.popViewController(animated: true)
-        }
-        alertController.addAction(okayAction)
-        present(alertController, animated: true)
-    }
     
     func getPuzzlePhoto(){
         
@@ -109,29 +88,63 @@ extension PuzzleViewController {
             case .success(let image):
                 strongSelf.puzzleImage = image
             case .failure(let error):
-                //TODO: need to find the way to handle this errors
-                //check for error type and if it of type .canceled
-                //guard let responseError = error as? NetworkResponse, networkResponseError != .cancelled else { return }
                 if let responseError = error as? ServiceError {
-                    switch responseError {
-                    case .invalidBaseUrl:
-                        print("Failed to convert basedUrl into a valid URL Address")
-                    case .noData:
-                        print("Failed to receive data from server")
-                    case .cancelled:
-                        print("An asynchronous load has been canceled")
-                    case .unableToInitialize:
-                        print("Can't initialize UIImage from Data")
-                    }
+                    //TODO: not the best but ....
+                    print("Failed with ServiceErrorType: \(responseError)")
                 }
-                
-                
                 strongSelf.puzzleImage = UIImage(named: "nature")
             }
             
             strongSelf.screenElements(shouldShow: true)
             strongSelf.puzzleCollectionView.reloadData()
         }
+    }
+    
+    func screenElements(shouldShow: Bool){
+        if shouldShow {
+            self.activityIndicator.stopAnimating()
+        }
+        self.puzzleCollectionView.isHidden = !shouldShow
+    }
+    
+    @objc func dismissViewController(){
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    //An alert window with message
+    private func showCongratsAlert() {
+        let alertController = UIAlertController(title: "Congratulations!", message: "You have solved this puzzle", preferredStyle: .alert)
+        let okayAction = UIAlertAction(title: "okay", style: .default) { _ in
+            self.navigationController?.popViewController(animated: true)
+        }
+        alertController.addAction(okayAction)
+        present(alertController, animated: true)
+    }
+    
+    private func configureScreenElements(){
+        
+        navigationItem.title = "Completed: %"
+        view.backgroundColor = .white
+        
+        view.addSubview(activityIndicator)
+        view.addSubview(puzzleCollectionView)
+        view.addSubview(dismissButton)
+        
+        activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        activityIndicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        let height = view.frame.height <= view.frame.width ? view.frame.height : view.frame.width
+        puzzleCollectionView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        puzzleCollectionView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        puzzleCollectionView.widthAnchor.constraint(equalToConstant: height).isActive = true
+        puzzleCollectionView.heightAnchor.constraint(equalToConstant: height).isActive = true
+        
+        dismissButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 7).isActive = true
+        dismissButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
+        dismissButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
+        dismissButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
     }
 }
 
@@ -143,45 +156,32 @@ extension PuzzleViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! PuzzleCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! TileCell
         
-        if let image = puzzleImage {
-            cell.imageView.image = image
-        }
+        if let image = puzzleImage { cell.imageView.image = image }
         
-        //TODO: unsafe
-        let index = (Int(puzzle.unOredredItems[indexPath.item]) ?? 0) - 1
+        let index = puzzle.unOredredItems[indexPath.item]
         
-        let rowDivider = CGFloat(index % 3)
-        let colDivider = CGFloat(index / 3)
-        
-
-        //TODO: Not a pixel perfect solution
-        //TODO: Should I move all this logic inside a ViewModel?
-        let puzzleWidth = self.puzzleCollectionView.frame.width
-        let puzzleHeight = self.puzzleCollectionView.frame.height
-        let thirdWidth = -puzzleWidth / 3
-        let thirdHeight = -puzzleHeight / 3
-        
-        let leftMargin: CGFloat = rowDivider == 0 ? 0 : thirdWidth * rowDivider
-        let topMargin: CGFloat = colDivider == 0 ? 0 : thirdHeight * colDivider
-        
-        
-        cell.template = (topMargin, leftMargin)
-        
+        cell.tileViewModel = TileViewModel(width: puzzleCollectionView.frame.width,
+                                      height: puzzleCollectionView.frame.height,
+                                      index: index)
         return cell
     }
 }
 
 extension PuzzleViewController: UICollectionViewDelegateFlowLayout {
-    //TODO: Size
+    //Size
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            let collectionViewHeight = collectionView.frame.height / 3//TODO: Not a perfect pixel size
-            let collectionViewWidth = collectionView.frame.width / 3
-            return CGSize(width: collectionViewWidth, height: collectionViewHeight)
+        
+            let height = collectionView.frame.height
+            let width = collectionView.frame.width
+        
+            let edgeSize = width <= height ? width / 3 : height / 3 //TODO: NOt pixel perfect solution
+            
+            return CGSize(width: edgeSize, height: edgeSize)
     }
 
-    //TODO: Insets
+    //Insets
     //this method implements UIEdgeInsets for different size of puzzle
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
             return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -201,7 +201,7 @@ extension PuzzleViewController: UICollectionViewDragDelegate {
     //As you can see, in the ‘itemsForBeginning’ method we are calling our ‘dragItem’ that will deal with the dragItem to be returned. The helper method ‘dragItem’ helps us create the itemProvider with the correct string or image content, depending on the cell we are dragging.
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         
-        //TODO: Seems like it has an isssue but I don't realy know how to imaplement it
+        
         let item = self.puzzle.unOredredItems[indexPath.item]
         let solvedItem = self.puzzle.orderedItems[indexPath.item]
         //TODO: fix blocked && untouched cells
@@ -210,7 +210,10 @@ extension PuzzleViewController: UICollectionViewDragDelegate {
             return [UIDragItem]()
         }
         
-        let itemProvider = NSItemProvider(object: item as NSString)
+        
+        //TODO: want to be sure this convertion doesn't slow down all movements
+        //NSItemProviderWriting
+        let itemProvider = NSItemProvider(object: String(item) as NSString)
         let dragItem = UIDragItem(itemProvider: itemProvider)
         dragItem.localObject = dragItem
         return [dragItem]
@@ -276,7 +279,7 @@ extension PuzzleViewController: UICollectionViewDropDelegate {
     //this method is called every time a item is dropped and checks everytime if puzzle is solved or not.If unsolvedImage array equals to solved image array. Change dragInteractionEnabled to false to tell user that puzzle has solved and show Alert .Enable rightBarbutton to true to navigate to next puzzle.
     func collectionView(_ collectionView: UICollectionView, dropSessionDidEnd session: UIDropSession) {
         if puzzle.unOredredItems == puzzle.orderedItems {
-            self.showErrorAlert()
+            self.showCongratsAlert()
             collectionView.dragInteractionEnabled = false
         }
     }

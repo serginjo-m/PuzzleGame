@@ -84,10 +84,10 @@ final class PuzzleViewController_Tests: XCTestCase {
             let puzzleVC = PuzzleViewController()
             
             //When (Act)
-            let puzzle = Puzzle()
-            
+            let puzzle = puzzleVC.puzzle
             //Then (Assert)
             XCTAssertNotEqual(puzzle.orderedItems, puzzle.unOredredItems)
         }
     }
+    
 }

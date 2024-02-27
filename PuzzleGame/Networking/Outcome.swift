@@ -34,15 +34,4 @@ enum Outcome<Value>
         }
         return nil
     }
-    
-    //holds success Bool
-    //in case of success true, eles false
-    var success: Bool
-    {
-        if case .success = self
-        {
-            return true
-        }
-        return false
-    }
 }

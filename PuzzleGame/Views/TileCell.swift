@@ -6,12 +6,13 @@
 //
 
 import UIKit
-class PuzzleCell: UICollectionViewCell {
-    
-    var template: (top: CGFloat, leading: CGFloat)? {
+class TileCell: UICollectionViewCell {
+    //TODO: How about include some test between view model and cell?
+    var tileViewModel: TileViewModel? {
         didSet{
-            self.imageTopAnchor.constant = self.template!.top
-            self.imageLeadingAnchor.constant = self.template!.leading
+            guard let tileViewModel = tileViewModel else {return}
+            self.imageTopAnchor.constant = tileViewModel.topMargin
+            self.imageLeadingAnchor.constant = tileViewModel.leftMargin
         }
     }
     
