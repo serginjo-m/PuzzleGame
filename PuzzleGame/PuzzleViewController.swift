@@ -30,7 +30,7 @@ class PuzzleViewController: UIViewController{
         label.textAlignment = .center
         label.backgroundColor = .systemYellow
         label.alpha = 0
-        label.textColor = .label
+        label.textColor = .black
         return label
     }()
     
