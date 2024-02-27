@@ -28,22 +28,62 @@ final class PhotoLoader_Tests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
     
+    
+    //don't really like this approach
+    func test_PhotoLoader_fetchImage_shouldReturnImage(){
+        //Given (Arrange)
+        let loader = PhotoApi.GetPhoto()
+        //When (Act)
+        var image: UIImage?
+        
+        loader.fetchImage { outcome in
+            switch outcome {
+                
+            case .success(let img):
+                image = img
+            case .failure(_):
+                image = nil
+            }
+            //Then (Assert)
+           XCTAssertNotNil(image)
+        }
+    }
+    
+    
+    //This one checks if function returns something in 5 seconds
     func test_PhotoLoader_fetchImage_shouldReturnData(){
         //Given (Arrange)
         let photoLoader = PhotoApi.GetPhoto()
 
         //When (Act)
         var image: UIImage?
-        var expectation = XCTestExpectation()
-        photoLoader.fetchImage { data in
-            guard let data = data else {return}
-            image = UIImage(data: data)
+        let expectation = XCTestExpectation()
+        
+        photoLoader.fetchImage { outcome in
+            
+            switch outcome {
+                
+            case .success(let img):
+                image = img
+            case .failure(_):
+                image = nil
+            }
+
             expectation.fulfill()
         }
         //Then (Assert)
         wait(for: [expectation], timeout: 5)
         XCTAssertNotNil(image)
     }
-
-
+    //Make sure that the baseURL string can be converted to valid URL
+    func test_PhotoLoader_baseURL_shouldBeValidURLString(){
+        //Given (Arrange)
+        let loader = PhotoApi.GetPhoto()
+        var baseUrl = loader.baseURL
+        //When (Act)
+        let validUrl = URL(string: baseUrl)
+        //Then (Assert)
+        XCTAssertNotNil(validUrl)
+    }
+    
 }

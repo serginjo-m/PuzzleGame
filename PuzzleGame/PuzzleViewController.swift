@@ -25,6 +25,7 @@ class PuzzleViewController: UIViewController{
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = UIColor.clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.isHidden = true
         return collectionView
     }()
     
@@ -87,22 +88,50 @@ class PuzzleViewController: UIViewController{
 
 extension PuzzleViewController {
     
+    //An alert window with message
+    private func showErrorAlert() {
+        let alertController = UIAlertController(title: "Congratulations!", message: "You have solved this puzzle", preferredStyle: .alert)
+        let okayAction = UIAlertAction(title: "okay", style: .default) { _ in
+            self.navigationController?.popViewController(animated: true)
+        }
+        alertController.addAction(okayAction)
+        present(alertController, animated: true)
+    }
+    
     func getPuzzlePhoto(){
         
-        PhotoApi.GetPhoto().fetchImage { [weak self] imageData in
+        PhotoApi.GetPhoto().fetchImage { [weak self] outcome in
             
             guard let strongSelf = self else { return }
             
-            if let data = imageData {
-                strongSelf.puzzleImage = UIImage(data: data)
-                strongSelf.screenElements(shouldShow: true)
-                strongSelf.puzzleCollectionView.reloadData()
-            } else {
-                //TODO: strongSelf.showAlert()
+            switch outcome {
+                
+            case .success(let image):
+                strongSelf.puzzleImage = image
+            case .failure(let error):
+                //TODO: need to find the way to handle this errors
+                //check for error type and if it of type .canceled
+                //guard let responseError = error as? NetworkResponse, networkResponseError != .cancelled else { return }
+                if let responseError = error as? ServiceError {
+                    switch responseError {
+                    case .invalidBaseUrl:
+                        print("Failed to convert basedUrl into a valid URL Address")
+                    case .noData:
+                        print("Failed to receive data from server")
+                    case .cancelled:
+                        print("An asynchronous load has been canceled")
+                    case .unableToInitialize:
+                        print("Can't initialize UIImage from Data")
+                    }
+                }
+                
+                
                 strongSelf.puzzleImage = UIImage(named: "nature")
             }
+            
+            strongSelf.screenElements(shouldShow: true)
+            strongSelf.puzzleCollectionView.reloadData()
         }
-        
     }
 }
 
@@ -175,7 +204,7 @@ extension PuzzleViewController: UICollectionViewDragDelegate {
         //TODO: Seems like it has an isssue but I don't realy know how to imaplement it
         let item = self.puzzle.unOredredItems[indexPath.item]
         let solvedItem = self.puzzle.orderedItems[indexPath.item]
-        
+        //TODO: fix blocked && untouched cells
         //this prevents from dragging a solved cell
         if item == solvedItem {
             return [UIDragItem]()
@@ -194,6 +223,7 @@ extension PuzzleViewController: UICollectionViewDropDelegate {
         UICollectionViewDropProposal has four types of operation which is copy,forbidden,cancel,move.In this project I have used move operation which is to arrange the puzzles.
      */
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        
         
         if let destinationItem = destinationIndexPath{
             
@@ -246,7 +276,7 @@ extension PuzzleViewController: UICollectionViewDropDelegate {
     //this method is called every time a item is dropped and checks everytime if puzzle is solved or not.If unsolvedImage array equals to solved image array. Change dragInteractionEnabled to false to tell user that puzzle has solved and show Alert .Enable rightBarbutton to true to navigate to next puzzle.
     func collectionView(_ collectionView: UICollectionView, dropSessionDidEnd session: UIDropSession) {
         if puzzle.unOredredItems == puzzle.orderedItems {
-            Alert.showSolvedPuzzleAlert(on: self)
+            self.showErrorAlert()
             collectionView.dragInteractionEnabled = false
         }
     }
