@@ -84,7 +84,7 @@ class PuzzleViewController: UIViewController{
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        puzzleCollectionView.reloadData()
+        puzzleCollectionView.reloadData()//MARK: It is not necessary
     }
 }
 
@@ -276,7 +276,7 @@ extension PuzzleViewController: UICollectionViewDragDelegate {
 extension PuzzleViewController: UICollectionViewDropDelegate {
     
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
-        
+        //Block dropping tiles in solved positions
         if let destinationItem = destinationIndexPath{
             //check if destination tile is in correct position
             if checkForCorrectPosition(index: destinationItem.item) {
@@ -298,7 +298,7 @@ extension PuzzleViewController: UICollectionViewDropDelegate {
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         var destinationIndexPath: IndexPath
         //get IndexPath from coordinator
-        if let indexPath = coordinator.destinationIndexPath {
+        if let indexPath = coordinator.destinationIndexPath {//TODO: 
             destinationIndexPath = indexPath
         }else{
             let row = collectionView.numberOfItems(inSection: 0)

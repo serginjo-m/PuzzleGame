@@ -15,7 +15,7 @@ struct TileViewModel {
     
     init(width: CGFloat, height: CGFloat, index: Int){
         //calculates tile row position
-        let rowDivider = CGFloat(index % 3)
+        let rowDivider = CGFloat(index % 3)//index.isMultiple(of: 3)
         //calculates tile column position
         let colDivider = CGFloat(index / 3)
         //screen rotation require using of smallest side

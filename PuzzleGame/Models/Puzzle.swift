@@ -9,7 +9,7 @@ import Foundation
 
 struct Puzzle: Codable {
     //puzzle items in correct order
-    var orderedItems: [Int]
+    var orderedItems: [Int] 
     //puzzle items in incorrect order
     var unOredredItems: [Int]
     
